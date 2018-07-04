@@ -1,11 +1,19 @@
 <!DOCTYPE html>
-        <html lang="en">
-            <head>
-            <meta charset="UTF-8">
-            <title>KIS пробователь</title>
-        </head>
-        <body>
-        <script>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>KIS пробователь</title>
+    <link rel="stylesheet" type="text/css" href="tablesorter/themes/blue/style.css">
+    <script src="JQuery/jquery-3.3.1.js"></script>
+    <script src="tablesorter/jquery.tablesorter.js"></script>
+    <script>
+        $(document).ready(function () {
+            // // call the tablesorter plugin
+            // $("table").tablesorter({
+            //     // sort on the first column and third column, order asc
+            //     sortList: [[0, 0], [2, 0]]
+            // });
+            //
             /*
             states:
             0 - not tried
@@ -20,13 +28,13 @@
             var open = indexedDB.open("MyDatabase", 1);
 
             // Create the schema
-            open.onupgradeneeded = function() {
+            open.onupgradeneeded = function () {
                 var db = open.result;
                 var store = db.createObjectStore("MyObjectStore", {keyPath: "key"});
                 var index = store.createIndex("KeyIndex", ["key"]);
             };
 
-            open.onsuccess = function() {
+            open.onsuccess = function () {
                 // Start a new transaction
                 var db = open.result;
                 var tx = db.transaction("MyObjectStore", "readwrite");
@@ -34,14 +42,14 @@
                 var index = store.index("KeyIndex");
 
                 // Add some data
-                store.put({key: "BZ71S-N9741-PRM9A-4TSBC", state:0, country: "England"});
-                store.put({key: "fhj71S-N9741-PRM9A-4TSfe", state:0, country: "India"});
+                store.put({key: "BZ71S-N9741-PRM9A-4TSBC", state: 0, country: "England"});
+                store.put({key: "fhj71S-N9741-PRM9A-4TSfe", state: 0, country: "India"});
 
                 // Query the data
                 var getJohn = store.get("BZ71S-N9741-PRM9A-4TSBC");
                 // var getBob = index.get(["Smith", "Bob"]);
 
-                getJohn.onsuccess = function() {
+                getJohn.onsuccess = function () {
                     console.log(getJohn.result.key);  // => "John"
                 };
 
@@ -50,10 +58,36 @@
                 // };
 
                 // Close the db when the transaction is done
-                tx.oncomplete = function() {
+                tx.oncomplete = function () {
                     db.close();
                 };
-            }
-</script>
+            };
+            ////////
+            $('<table>', {
+                cellspacing: 1, class: "tablesorter",
+                append: $('<thead>', {
+                        append: $('<tr>', {
+                            append: $('<th>', {
+                                text: 'key',
+                            }).add($('<th>', {
+                                text: 'used?'
+                            }))
+                        })
+                    }).add(
+                    $('<tbody>', {
+                        append: $('<tr>', {
+                            append: $('<td>', {
+                                text: '1',
+                            }).add($('<td>', {
+                                text: 'u?'
+                            }))
+                        })
+                    })
+                )
+            }).appendTo('body');
+        });
+    </script>
+</head>
+<body>
 </body>
 </html>
