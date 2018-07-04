@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+        <html lang="en">
+            <head>
+            <meta charset="UTF-8">
+            <title>KIS пробователь</title>
+        </head>
+        <body>
+        <script>
+            /*
+            states:
+            0 - not tried
+            1 - valid
+            2 - too many activations
+            3 - blocked
+             */
+            // This works on all devices/browsers, and uses IndexedDBShim as a final fallback
+            var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
+
+            // Open (or create) the database
+            var open = indexedDB.open("MyDatabase", 1);
+
+            // Create the schema
+            open.onupgradeneeded = function() {
+                var db = open.result;
+                var store = db.createObjectStore("MyObjectStore", {keyPath: "key"});
+                var index = store.createIndex("KeyIndex", ["key"]);
+            };
+
+            open.onsuccess = function() {
+                // Start a new transaction
+                var db = open.result;
+                var tx = db.transaction("MyObjectStore", "readwrite");
+                var store = tx.objectStore("MyObjectStore");
+                var index = store.index("KeyIndex");
+
+                // Add some data
+                store.put({key: "BZ71S-N9741-PRM9A-4TSBC", state:0, country: "England"});
+                store.put({key: "fhj71S-N9741-PRM9A-4TSfe", state:0, country: "India"});
+
+                // Query the data
+                var getJohn = store.get("BZ71S-N9741-PRM9A-4TSBC");
+                // var getBob = index.get(["Smith", "Bob"]);
+
+                getJohn.onsuccess = function() {
+                    console.log(getJohn.result.key);  // => "John"
+                };
+
+                // getBob.onsuccess = function() {
+                //     console.log(getBob.result.name.first);   // => "Bob"
+                // };
+
+                // Close the db when the transaction is done
+                tx.oncomplete = function() {
+                    db.close();
+                };
+            }
+</script>
+</body>
+</html>
