@@ -8,12 +8,6 @@
     <script src="tablesorter/jquery.tablesorter.js"></script>
     <script>
         $(document).ready(function () {
-            // // call the tablesorter plugin
-            // $("table").tablesorter({
-            //     // sort on the first column and third column, order asc
-            //     sortList: [[0, 0], [2, 0]]
-            // });
-            //
             /*
             states:
             0 - not tried
@@ -46,16 +40,47 @@
                 store.put({key: "fhj71S-N9741-PRM9A-4TSfe", state: 0, country: "India"});
 
                 // Query the data
-                var getJohn = store.get("BZ71S-N9741-PRM9A-4TSBC");
+                var getJohn = store.getAll();
                 // var getBob = index.get(["Smith", "Bob"]);
 
                 getJohn.onsuccess = function () {
-                    console.log(getJohn.result.key);  // => "John"
-                };
+                    var ind = 0;
+                    var res = getJohn.result;
+                    var tbody = $('<tbody>', {append:$('<tr>', {
+                        append: $('<td>', {
+                            text: res[ind].key,
+                        }).add(
+                            $('<td>', {text: res[ind].state}),
+                            $('<td>', {text: res[ind].country})
+                        )
+                    })
+                    });
+                    for (ind = 1; ind < res.length; ind++) {
+                        tbody.append($('<tr>', {
+                            append: $('<td>', {
+                                text: res[ind].key,
+                            }).add(
+                                $('<td>', {text: res[ind].state}),
+                                $('<td>', {text: res[ind].country})
+                            )
+                        }));
+                    }
 
-                // getBob.onsuccess = function() {
-                //     console.log(getBob.result.name.first);   // => "Bob"
-                // };
+                    $('<table>', {
+                            cellspacing: 1, class: "tablesorter",
+                            append: $('<thead>', {
+                                append: $('<tr>', {
+                                    append: $('<th>', {text: 'key',})
+                                        .add(
+                                            $('<th>', {text: 'used?'})
+                                        )
+                                })
+                            }).add(
+                                 tbody
+                            )
+                        }
+                    ).tablesorter().appendTo('body');
+                };
 
                 // Close the db when the transaction is done
                 tx.oncomplete = function () {
@@ -63,28 +88,7 @@
                 };
             };
             ////////
-            $('<table>', {
-                cellspacing: 1, class: "tablesorter",
-                append: $('<thead>', {
-                        append: $('<tr>', {
-                            append: $('<th>', {
-                                text: 'key',
-                            }).add($('<th>', {
-                                text: 'used?'
-                            }))
-                        })
-                    }).add(
-                    $('<tbody>', {
-                        append: $('<tr>', {
-                            append: $('<td>', {
-                                text: '1',
-                            }).add($('<td>', {
-                                text: 'u?'
-                            }))
-                        })
-                    })
-                )
-            }).appendTo('body');
+
         });
     </script>
 </head>
